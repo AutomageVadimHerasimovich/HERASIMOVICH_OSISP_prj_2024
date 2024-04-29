@@ -96,3 +96,35 @@ void createFile(const char* filename) {
     }
     fclose(file);
 }
+
+#include <iostream>
+#include <unistd.h>
+
+std::string getClipboardContent() {
+    char buffer[128];
+    std::string result;
+    FILE* pipe = popen("/usr/bin/pbpaste", "r");
+    if (!pipe) throw std::runtime_error("popen() failed!");
+    try {
+        while (fgets(buffer, sizeof buffer, pipe) != nullptr) {
+            result += buffer;
+        }
+    } catch (...) {
+        pclose(pipe);
+        throw;
+    }
+    pclose(pipe);
+    return result;
+}
+
+[[noreturn]] void checkChangesInCB() {
+    std::string lastClipboardContent = getClipboardContent();
+    while (true) {
+        sleep(1); /** Check every 5 seconds*/
+        std::string currentClipboardContent = getClipboardContent();
+        if (currentClipboardContent != lastClipboardContent) {
+            std::cout << "Clipboard content has changed.\n";
+            lastClipboardContent = currentClipboardContent;
+        }
+    }
+}
