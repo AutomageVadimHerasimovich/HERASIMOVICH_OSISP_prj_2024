@@ -22,6 +22,6 @@ void writeToClipboard();
 
 void createFile(const char* filename);
 
-[[noreturn]] void checkChangesInCB();
+void checkChangesInCB();
 
 #endif // CLIPBOARD_HANDLER_H

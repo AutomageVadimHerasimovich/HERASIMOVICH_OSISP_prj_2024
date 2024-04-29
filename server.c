@@ -10,12 +10,16 @@ int main(void) {
     adr.sin_family = AF_INET;
     adr.sin_port = htons(53535);
     Bind(server, &adr, sizeof(adr));
+    while (1) {
     Listen(server, 1);
     socklen_t addrlen = sizeof(adr);
     int fd = Accept(server, &adr, addrlen);
-    recieve_file("recieved1.txt",fd);
-    recieve_file("recieved2.txt",fd);
-    sleep(5);
-    close(fd);
-    close(server);
+    if (fd == -1) {
+        printf("Failed to accept connection\n");
+        close(fd);
+        close(server);
+        exit(-1);
+    }
+    recieve_file("input.txt", fd);
+    }
 }

@@ -1,6 +1,8 @@
 #include "clipboard_handler.h"
 #include <cstdlib>
 #include <vector>
+#include <iostream>
+#include <unistd.h>
 
 FILE* openToReadClipboard() {
     FILE *fp = popen("/usr/bin/pbpaste", "r");
@@ -97,9 +99,6 @@ void createFile(const char* filename) {
     fclose(file);
 }
 
-#include <iostream>
-#include <unistd.h>
-
 std::string getClipboardContent() {
     char buffer[128];
     std::string result;
@@ -117,7 +116,7 @@ std::string getClipboardContent() {
     return result;
 }
 
-[[noreturn]] void checkChangesInCB() {
+void checkChangesInCB() {
     std::string lastClipboardContent = getClipboardContent();
     while (true) {
         sleep(1); /** Check every 5 seconds*/
@@ -125,6 +124,12 @@ std::string getClipboardContent() {
         if (currentClipboardContent != lastClipboardContent) {
             std::cout << "Clipboard content has changed.\n";
             lastClipboardContent = currentClipboardContent;
+            FILE* fp = openToReadClipboard();
+            FILE* outFile = openToWriteOutputFile("output.txt");
+            writeToFile(fp, outFile);
+            pclose(fp);
+            fclose(outFile);
+            printFileContents("output.txt");
         }
     }
 }

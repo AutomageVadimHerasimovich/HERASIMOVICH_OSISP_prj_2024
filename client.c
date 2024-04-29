@@ -9,11 +9,10 @@ int main(void) {
     adr.sin_family = AF_INET;
     adr.sin_port = htons(53535);
     char* macAddress = "38:f9:d3:2f:8c:50"; // Замените на реальный MAC-адрес
-    char* ipAddress = getIPFromMAC(macAddress);
+    char *ipAddress = getIPFromMAC(macAddress);
     printf("IP address for MAC %s is %s\n", macAddress, ipAddress);
     Inet_pton(AF_INET, ipAddress, &adr.sin_addr);
     Connect(fd, &adr, sizeof(adr));
-    send_file("test.txt",fd);
-    send_file("file2.txt",fd);
+    send_file("output.txt",fd);
     close(fd);
 }

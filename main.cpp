@@ -3,20 +3,10 @@
 
 int main() {
     createFile("input.txt");
-    FILE *fp = openToReadClipboard();
-    FILE *outFile = openToWriteOutputFile("output.txt");
-    writeToFile(fp, outFile);
-    pclose(fp);
-    fclose(outFile);
-    printFileContents("output.txt");
-    writeToClipboard();
-    fp = openToReadClipboard();
-    outFile = openToWriteOutputFile("output.txt");
-    writeToFile(fp, outFile);
-    pclose(fp);
-    fclose(outFile);
-    printFileContents("output.txt");
-    while (true){
-        checkChangesInCB();
-    }
+    createFile("output.txt");
+    //запустить клиента
+    //проврить есть ли подключение
+    //если нет, запустить сервер
+    checkChangesInCB();
+    return 0;
 }
