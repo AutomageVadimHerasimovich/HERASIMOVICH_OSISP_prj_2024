@@ -16,6 +16,7 @@ int main() {
     pclose(fp);
     fclose(outFile);
     printFileContents("output.txt");
-    checkChangesInCB();
-    return 0;
+    while (true){
+        checkChangesInCB();
+    }
 }
