@@ -64,7 +64,7 @@ char* getIPFromMAC(const char* macAddress) {
     // Выполнить команду ping для обновления таблицы ARP
 //    char* pingCommand = "ping -c 1 192.168.1.255 > /dev/null";
 //    system(pingCommand);
-    char* pingCommand = "ping -c 1 192.168.43.255 > /dev/null"; //Universal ip-adress
+    char* pingCommand = "ping -c 1 192.168.1.255 > /dev/null"; //Universal ip-adress
     system(pingCommand);
     // Затем выполнить arp -a для получения IP-адреса по MAC-адресу
     char arpCommand[128];
