@@ -189,7 +189,7 @@ void checkChangesInCB() {
     std::string lastClipboardContent = getClipboardContent();
     std::thread serverThred(runServerProgram);
     while (true) {
-        sleep(1); /** Check every 5 seconds*/
+        sleep(1); /** Check every 1 seconds*/
         std::string currentClipboardContent = getClipboardContent();
         if (currentClipboardContent != lastClipboardContent) {
             std::cout << "Clipboard content has changed.\n";
