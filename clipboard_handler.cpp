@@ -116,6 +116,34 @@ std::string getClipboardContent() {
     return result;
 }
 
+#include <sys/wait.h>
+
+void runClientProgram() {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        std::cerr << "Failed to fork\n";
+        exit(1);
+    }
+
+    if (pid == 0) {
+        // We are in the child process
+        execl("./client", "client", (char*)NULL);
+        // If execl returns, there was an error
+        std::cerr << "Failed to start client\n";
+        exit(1);
+    } else {
+        // We are in the parent process
+        int status;
+        waitpid(pid, &status, 0); // Wait for the child to finish
+        if (WIFEXITED(status)) {
+            std::cout << "Child exited with status " << WEXITSTATUS(status) << '\n';
+        } else {
+            std::cout << "Child process did not exit successfully\n";
+        }
+    }
+}
+
 void checkChangesInCB() {
     std::string lastClipboardContent = getClipboardContent();
     while (true) {
@@ -130,6 +158,7 @@ void checkChangesInCB() {
             pclose(fp);
             fclose(outFile);
             printFileContents("output.txt");
+            runClientProgram();
         }
     }
 }

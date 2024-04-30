@@ -1,4 +1,3 @@
-#include <cstdio>
 #include "clipboard_handler.h"
 
 int main() {

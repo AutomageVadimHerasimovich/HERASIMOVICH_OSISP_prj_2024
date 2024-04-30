@@ -24,4 +24,6 @@ void createFile(const char* filename);
 
 void checkChangesInCB();
 
+void runClientProgram();
+
 #endif // CLIPBOARD_HANDLER_H
