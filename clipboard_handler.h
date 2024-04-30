@@ -2,6 +2,7 @@
 #define CLIPBOARD_HANDLER_H
 
 #include <cstdio>
+#include <sys/types.h>
 
 FILE* openToReadClipboard();
 
@@ -23,6 +24,8 @@ void writeToClipboard();
 void createFile(const char* filename);
 
 void checkChangesInCB();
+
+pid_t runServerProgram();
 
 void runClientProgram();
 

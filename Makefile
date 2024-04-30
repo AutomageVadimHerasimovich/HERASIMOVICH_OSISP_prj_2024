@@ -12,7 +12,7 @@ server: server.c file_transfer.c socket_wrapper.c Makefile
 client: client.c file_transfer.c socket_wrapper.c Makefile
 	$(CC) $(CFLAGS) client.c file_transfer.c socket_wrapper.c -o client
 
-main: main.cpp clipboard_handler.cpp clipboard_handler.h Makefile
+main: main.cpp clipboard_handler.cpp Makefile
 	$(CXX) $(CXXFLAGS) main.cpp clipboard_handler.cpp -o main
 
 clean:

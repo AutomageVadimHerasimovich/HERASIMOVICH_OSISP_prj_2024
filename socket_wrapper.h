@@ -12,4 +12,5 @@ int Accept(int server,struct sockaddr_in* adr, socklen_t socklen);
 void Connect(int fd,struct sockaddr_in* adr,socklen_t socklen);
 void Inet_pton(int af,const char* src,void *dst);
 char* getIPFromMAC(const char* macAddress);
+void createServer(int* fd);
 #endif //FILESHARE_FWRAPPER_H

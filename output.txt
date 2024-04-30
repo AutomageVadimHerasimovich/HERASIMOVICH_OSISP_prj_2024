@@ -1,1 +1,1 @@
-input.txtoutput.txtclipboard_handler.hfile_transfer.hREADME.mdserver.csocket_wrapper.c
+Child exited with status 0

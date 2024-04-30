@@ -6,6 +6,7 @@ int main() {
     //запустить клиента
     //проврить есть ли подключение
     //если нет, запустить сервер
+    //runServerProgram();
     checkChangesInCB();
     return 0;
 }

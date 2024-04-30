@@ -3,9 +3,8 @@
 #include <netinet/in.h>
 #include <stdio.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 #include "socket_wrapper.h"
-
-
 
 int Socket(int domain, int type, int protocol) {
     int server = socket(domain, type, protocol);
@@ -63,9 +62,10 @@ void Inet_pton(int af, const char *src, void *dst) {
 
 char* getIPFromMAC(const char* macAddress) {
     // Выполнить команду ping для обновления таблицы ARP
-    char* pingCommand = "ping -c 1 192.168.1.255 > /dev/null";
+//    char* pingCommand = "ping -c 1 192.168.1.255 > /dev/null";
+//    system(pingCommand);
+    char* pingCommand = "ping -c 1 192.168.43.255 > /dev/null"; //Universal ip-adress
     system(pingCommand);
-
     // Затем выполнить arp -a для получения IP-адреса по MAC-адресу
     char arpCommand[128];
     sprintf(arpCommand, "arp -a | grep %s", macAddress);
@@ -86,4 +86,21 @@ char* getIPFromMAC(const char* macAddress) {
         *ipEnd = '\0'; // Заменить закрывающую скобку на нулевой символ
     }
     return strdup(ipStart);
+}
+
+void createServer(int* fd){
+    int server = Socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in adr = {0};
+    adr.sin_family = AF_INET;
+    adr.sin_port = htons(53535);
+    Bind(server, &adr, sizeof(adr));
+    Listen(server, 1);
+    socklen_t addrlen = sizeof(adr);
+    *fd = Accept(server, &adr, addrlen);
+    if (*fd == -1) {
+        printf("Failed to accept connection\n");
+        close(*fd);
+        close(server);
+        exit(-1);
+    }
 }

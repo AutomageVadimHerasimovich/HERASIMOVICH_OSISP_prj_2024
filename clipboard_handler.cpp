@@ -128,7 +128,7 @@ void runClientProgram() {
 
     if (pid == 0) {
         // We are in the child process
-        execl("./client", "client", (char*)NULL);
+        execl("./client", "client", (char*) nullptr);
         // If execl returns, there was an error
         std::cerr << "Failed to start client\n";
         exit(1);
@@ -144,8 +144,50 @@ void runClientProgram() {
     }
 }
 
+#include <csignal>
+
+pid_t server_pid = -1;
+
+void terminate(int signal) {
+    if (server_pid != -1) {
+        kill(server_pid, SIGTERM);
+    }
+    exit(0);
+}
+
+pid_t runServerProgram() {
+    pid_t pid = fork();
+
+    if (pid < 0) {
+        std::cerr << "Failed to fork\n";
+        exit(1);
+    }
+
+    if (pid == 0) {
+        // We are in the child process
+        execl("./server", "server", (char*) nullptr);
+        // If execl returns, there was an error
+        std::cerr << "Failed to start server\n";
+        exit(1);
+    } else {
+        // We are in the parent process
+        server_pid = pid;
+        signal(SIGTERM, terminate);
+        int status;
+        waitpid(pid, &status, 0); // Wait for the child to finish
+        if (WIFEXITED(status)) {
+            std::cout << "Child (server) exited with status " << WEXITSTATUS(status) << '\n';
+        } else {
+            std::cout << "Child (server) process did not exit successfully\n";
+        }
+    }
+    return pid;
+}
+
+#include <thread>
 void checkChangesInCB() {
     std::string lastClipboardContent = getClipboardContent();
+    std::thread serverThred(runServerProgram);
     while (true) {
         sleep(1); /** Check every 5 seconds*/
         std::string currentClipboardContent = getClipboardContent();
@@ -158,7 +200,10 @@ void checkChangesInCB() {
             pclose(fp);
             fclose(outFile);
             printFileContents("output.txt");
-            runClientProgram();
+            std::thread clientThred(runClientProgram);
+            clientThred.join();
+            //sleep(2);
+            //serverThred.join();
         }
     }
 }
